@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 # MyStore — Flask + Bootstrap + SQLite
 
@@ -20,3 +21,7 @@ python app.py
 
 The DB seeds on first run with 80 products (10 for each brand).  
 Use the **Admin** link in the navbar to manage products.
+=======
+# pymid
+mypp
+>>>>>>> 4d89e448e4ad7c3fcc035da6a461e9c064ab1e91
