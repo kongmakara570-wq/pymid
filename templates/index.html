@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% set has_slider = images and images|length > 0 %}
+{% set has_side = expensive and expensive|length > 0 %}
+
+{% if has_slider or has_side %}
+<div class="row g-3 align-items-stretch mb-4">
+  <!-- LEFT: SLIDER -->
+  <div class="col-12 {{ 'col-lg-8' if has_side else 'col-lg-12' }}">
+    {% if has_slider %}
+    <div id="heroCarousel"
+         class="carousel slide h-100"
+         data-bs-ride="carousel"
+         data-bs-interval="3500"
+         data-bs-pause="false">
+
+      <div class="carousel-indicators">
+        {% for _ in images %}
+          <button type="button"
+                  data-bs-target="#heroCarousel"
+                  data-bs-slide-to="{{ loop.index0 }}"
+                  class="{% if loop.first %}active{% endif %}"
+                  aria-current="{% if loop.first %}true{% endif %}"
+                  aria-label="Slide {{ loop.index }}"></button>
+        {% endfor %}
+      </div>
+
+      <div class="carousel-inner rounded-4 shadow">
+        {% for img in images %}
+          <div class="carousel-item {% if loop.first %}active{% endif %}">
+            <img src="{{ img['image_url'] }}" class="equal-hero" alt="{{ img['name'] }}">
+            <div class="carousel-caption text-start">
+              <h5 class="fw-bold mb-0">{{ img['name'] }}</h5>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- RIGHT: 4 HIGHEST-PRICE PRODUCTS (2×2) — home only -->
+  {% if has_side %}
+  <div class="col-12 col-lg-4">
+    <div class="row g-3 row-cols-2">
+      {% for p in expensive %}
+      <div class="col">
+        <a href="{{ url_for('product_detail', pid=p['id']) }}" class="text-decoration-none text-dark">
+          <div class="card border-0 h-100 hover-card">
+            <div class="equal-box-sm hover-image">
+              <img src="{{ p['image_url'] }}" alt="{{ p['name'] }}">
+              <div class="hover-overlay p-2">
+                <span class="badge text-bg-secondary mb-1">{{ p['brand'] }}</span>
+                <div class="small fw-semibold text-white">{{ p['name'] }}</div>
+                <div class="small fw-bold text-white-90">${{ '%.2f'|format(p['price']) }}</div>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+<h2 class="mb-3">{{ current_brand or "Latest Products" }}</h2>
+<div class="row g-3">
+  {% for p in products %}
+  <div class="col-6 col-md-4 col-lg-3">
+    <div class="card h-100 product-card">
+      <div class="equal-box">
+        <img src="{{ p['image_url'] }}" alt="{{ p['name'] }}">
+      </div>
+      <div class="card-body d-flex flex-column">
+        <small class="badge text-bg-secondary mb-2">{{ p['brand'] }}</small>
+        <h6 class="card-title">{{ p['name'] }}</h6>
+        <p class="text-muted small flex-grow-1">{{ p['description'][:80] }}...</p>
+        <div class="d-flex justify-content-between align-items-center">
+          <span class="fw-bold">${{ '%.2f'|format(p['price']) }}</span>
+          <a href="{{ url_for('product_detail', pid=p['id']) }}" class="btn btn-sm btn-success">View</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

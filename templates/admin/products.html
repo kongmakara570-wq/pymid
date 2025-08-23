@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="admin-wrap">
+  <aside class="admin-sidebar">
+    <div class="admin-brand"><i class="bi bi-speedometer2"></i> MyShop Admin</div>
+    <nav class="nav flex-column admin-nav">
+      <a class="nav-link" href="{{ url_for('admin_dashboard') }}"><i class="bi bi-graph-up"></i> Dashboard</a>
+      <a class="nav-link active" href="{{ url_for('admin_products') }}"><i class="bi bi-box-seam"></i> Products</a>
+      <a class="nav-link" href="{{ url_for('admin_new_product') }}"><i class="bi bi-plus-circle"></i> Add Product</a>
+      <a class="nav-link" href="{{ url_for('signout') }}"><i class="bi bi-box-arrow-right"></i> Sign Out</a>
+    </nav>
+  </aside>
+
+  <section class="admin-content">
+    <div class="admin-header">
+      <h5>Products</h5>
+      <a class="btn btn-warning btn-sm" href="{{ url_for('admin_new_product') }}"><i class="bi bi-plus-circle"></i> Add Product</a>
+    </div>
+
+    <div class="admin-body">
+      <form class="input-group mb-3" method="get">
+        <input name="q" class="form-control" placeholder="Search by name or brand..." value="{{ q }}">
+        <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
+      </form>
+
+      <div class="table-responsive">
+        <table class="table table-sm table-hover align-middle">
+          <thead>
+            <tr>
+              <th>ID</th><th>Image</th><th>Name</th><th>Brand</th><th>Description</th><th class="text-end">Price</th><th class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for p in products %}
+            <tr>
+              <td>{{ p['id'] }}</td>
+              <td><img src="{{ p['image_url'] }}" class="thumb-48" alt=""></td>
+              <td>{{ p['name'] }}</td>
+              <td><span class="badge badge-soft">{{ p['brand'] }}</span></td>
+              <td class="text-truncate" style="max-width:420px">{{ p['description'] }}</td>
+              <td class="text-end">${{ '%.2f'|format(p['price']) }}</td>
+              <td class="text-end action-btns">
+                <a href="{{ url_for('admin_edit_product', pid=p['id']) }}" class="btn btn-outline-primary btn-sm" title="Edit"><i class="bi bi-pencil"></i></a>
+                <form class="d-inline" method="post" action="{{ url_for('admin_delete_product', pid=p['id']) }}" onsubmit="return confirm('Delete this product?')">
+                  <button class="btn btn-outline-danger btn-sm" title="Delete"><i class="bi bi-trash"></i></button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

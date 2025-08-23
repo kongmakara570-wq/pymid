@@ -1,0 +1,41 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-md-7">
+    <div class="equal-detail shadow-sm">
+  <img src="{{ product['image_url'] }}" alt="{{ product['name'] }}">
+</div>
+
+  </div>
+  <div class="col-md-5">
+    <h2 class="mb-1">{{ product['name'] }}</h2>
+    <div class="mb-2"><span class="badge text-bg-primary">{{ product['brand'] }}</span></div>
+    <h3 class="text-success mb-3">${{ '%.2f'|format(product['price']) }}</h3>
+    <p class="lead">{{ product['description'] }}</p>
+    <div class="d-grid gap-2">
+      <a href="#" class="btn btn-outline-success btn-lg">Add to Cart</a>
+      <a href="#" class="btn btn-success btn-lg">Buy Now</a>
+    </div>
+    <a class="d-inline-block mt-3" href="{{ url_for('index') }}">&larr; Back to Home</a>
+  </div>
+</div>
+
+<hr class="my-5">
+<h4>You might also like</h4>
+<div class="row g-3">
+  {% for p in related %}
+  <div class="col-6 col-md-4 col-lg-3">
+    <a class="text-decoration-none text-dark" href="{{ url_for('product_detail', pid=p['id']) }}">
+      <div class="card h-100">
+        <img src="{{ p['image_url'] }}" class="card-img-top" alt="{{ p['name'] }}">
+        <div class="card-body">
+          <h6 class="card-title">{{ p['name'] }}</h6>
+          <span class="fw-bold">${{ '%.2f'|format(p['price']) }}</span>
+        </div>
+      </div>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
